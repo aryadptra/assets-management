@@ -34,10 +34,10 @@
             </div>
             <ul class="nav flex-column pt-3 pt-md-0">
                 <li class="nav-item">
-                    <span class="mt-2 d-flex justify-content-between">
+                    <span class="mt-2">
                         <span class="text-center">
                             <span class="sidebar-text text-center fw-bold"
-                                >ASSETS MANAGEMENT</span
+                                >ASSETS MANAGEMENT APP</span
                             >
                         </span>
                     </span>
@@ -92,7 +92,7 @@
                     :class="{ active: $page.url.startsWith('/warehouses') }"
                 >
                     <Link
-                        href="/warehouses"
+                        :href="route('warehouses.index')"
                         class="nav-link d-flex justify-content-between"
                     >
                         <span>
