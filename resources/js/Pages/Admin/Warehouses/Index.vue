@@ -406,6 +406,12 @@ export default {
                         form.address = "";
                         form.pic = "";
                         form.phone = "";
+
+                        // enable btn-save menggunakan js
+                        document.getElementById("btn-save").disabled = false;
+                        // hapus loading pada btn-save
+                        document.getElementById("btn-save").innerHTML =
+                            "Simpan";
                         //close modal menggunakan js
                         document.getElementById("modal-default").click();
 
@@ -459,7 +465,6 @@ export default {
         };
 
         const submitEdit = () => {
-            console.log(editModalData.id);
             // disable btn-save-edit menggunakan js
             document.getElementById("btn-save-edit").disabled = true;
             // set btn-save-edit menjadi loading
@@ -482,6 +487,11 @@ export default {
                         editModalData.address = "";
                         editModalData.pic = "";
                         editModalData.phone = "";
+
+                        document.getElementById(
+                            "btn-save-edit"
+                        ).disabled = false;
+
                         //close modal menggunakan js
                         document.getElementById("modal-edit").click();
 
