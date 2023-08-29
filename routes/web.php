@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('warehouses', \App\Http\Controllers\WarehouseController::class)->except(['show']);
+    Route::resource('commodity/categories', \App\Http\Controllers\CommodityCategoryController::class)->except(['show']);
 });
 
 require __DIR__ . '/auth.php';

@@ -120,6 +120,42 @@
                         </span>
                     </Link>
                 </li>
+
+                <li
+                    class="nav-item"
+                    :class="{
+                        active: $page.url.startsWith('/commodity/categories'),
+                    }"
+                >
+                    <Link
+                        :href="route('categories.index')"
+                        class="nav-link d-flex justify-content-between"
+                    >
+                        <span>
+                            <span class="sidebar-icon">
+                                <!-- Icon Warehouse -->
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    fill="currentColor"
+                                    class="bi bi-house-door icon icon-xs me-2"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M8 1.5a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-.5.5H2.5v9h11v-9H8.5a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 .5-.5zm.5 2.5h4.793L8.5 4.854V4z"
+                                    />
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M13.5 14h-11a.5.5 0 0 1-.5-.5V6.707l6-6L14 6.293V13.5a.5.5 0 0 1-.5.5zM2 5.207V13.5h11V5.207L8.854 2.354a.5.5 0 0 0-.708 0L2 5.207z"
+                                    />
+                                </svg>
+                            </span>
+                            <span class="sidebar-text">Kategori Komoditas</span>
+                        </span>
+                    </Link>
+                </li>
             </ul>
         </div>
     </nav>
