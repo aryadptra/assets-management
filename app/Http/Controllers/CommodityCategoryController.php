@@ -13,7 +13,7 @@ class CommodityCategoryController extends Controller
      */
     public function index()
     {
-        // get lesson
+        // get categories
         $categories = CommodityCategory::when(request()->q, function ($categories) {
             $categories = $categories->where('name', 'like', '%' . request()->q . '%');
         })->latest()->paginate(10);
