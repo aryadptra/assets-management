@@ -1,5 +1,5 @@
 <template>
-    <Head title="Kategori Komoditas" />
+    <Head title="Supplier" />
 
     <Admin>
         <Breadcrumb>
@@ -20,7 +20,7 @@
                 </svg>
                 Dashboard
             </BreadcrumbItem>
-            <BreadcrumbItem active link="#">Komoditas</BreadcrumbItem>
+            <BreadcrumbItem active link="#">Supplier</BreadcrumbItem>
         </Breadcrumb>
 
         <div class="row">
@@ -43,7 +43,7 @@
                                     type="text"
                                     class="form-control border-0 shadow"
                                     v-model="search"
-                                    placeholder="masukkan nama komoditas dan enter..."
+                                    placeholder="masukkan nama supplier dan enter..."
                                 />
                                 <span class="input-group-text border-0 shadow">
                                     <i class="fa fa-search"></i>
@@ -71,11 +71,10 @@
                                         >
                                             No.
                                         </th>
-                                        <th class="border-0">Kode</th>
-                                        <th class="border-0">Kategori</th>
                                         <th class="border-0">Nama</th>
-                                        <th class="border-0">Deskripsi</th>
-                                        <th class="border-0">Stok</th>
+                                        <th class="border-0">Email</th>
+                                        <th class="border-0">No. Handphone</th>
+                                        <th class="border-0">Alamat</th>
                                         <th
                                             class="border-0 rounded-end"
                                             style="width: 15%"
@@ -88,47 +87,32 @@
                                 <tbody>
                                     <tr
                                         v-for="(
-                                            commodity, index
-                                        ) in commodities.data"
+                                            supplier, index
+                                        ) in suppliers.data"
                                         :key="index"
                                     >
                                         <td class="fw-bold text-center">
                                             {{
                                                 ++index +
-                                                (commodities.current_page - 1) *
-                                                    commodities.per_page
+                                                (suppliers.current_page - 1) *
+                                                    suppliers.per_page
                                             }}
                                         </td>
-                                        <td>{{ commodity.code }}</td>
-                                        <td>{{ commodity.category.name }}</td>
-                                        <td>{{ commodity.name }}</td>
-                                        <td>{{ commodity.description }}</td>
-                                        <td>{{ commodity.stock }}</td>
+                                        <td>{{ supplier.name }}</td>
+                                        <td>{{ supplier.email }}</td>
+                                        <td>{{ supplier.phone }}</td>
+                                        <td>{{ supplier.address }}</td>
                                         <td class="text-center">
-                                            <!-- Link to detail -->
-                                            <Link
-                                                :href="
-                                                    route(
-                                                        'commodities.show',
-                                                        commodity.id
-                                                    )
-                                                "
-                                                class="btn btn-sm btn-success text-white border-0 shadow me-2"
-                                            >
-                                                <i class="fa fa-eye"></i>
-                                            </Link>
                                             <button
                                                 class="btn btn-sm btn-info border-0 shadow me-2"
                                                 type="button"
-                                                @click="
-                                                    openEditModal(commodity)
-                                                "
+                                                @click="openEditModal(supplier)"
                                             >
                                                 <i class="fa fa-pencil-alt"></i>
                                             </button>
                                             <button
                                                 @click.prevent="
-                                                    destroy(commodity.id)
+                                                    destroy(supplier.id)
                                                 "
                                                 class="btn btn-sm btn-danger border-0"
                                             >
@@ -139,13 +123,12 @@
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination :links="commodities.links" align="end" />
+                        <Pagination :links="suppliers.links" align="end" />
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Modal Create -->
         <div
             class="modal fade"
             id="modal-default"
@@ -157,7 +140,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 class="h6 modal-title">Tambah Data Komoditas</h2>
+                        <h2 class="h6 modal-title">Tambah Data Supplier</h2>
                         <button
                             type="button"
                             class="btn-close"
@@ -169,117 +152,72 @@
                         <div class="modal-body">
                             <div class="mb-4">
                                 <div
-                                    v-if="errors.warehouse_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.warehouse_id }}
-                                </div>
-                                <label for="warehouse_id">Gudang</label>
-                                <select
-                                    class="form-select"
-                                    name="warehouse_id"
-                                    id="warehouse_id"
-                                    v-model="form.warehouse_id"
-                                >
-                                    <option
-                                        v-for="warehouse in warehouses"
-                                        :key="warehouse.id"
-                                        :value="warehouse.id"
-                                    >
-                                        {{ warehouse.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.category_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.category_id }}
-                                </div>
-                                <label for="category_id">Kategori</label>
-                                <select
-                                    class="form-select"
-                                    name="category_id"
-                                    id="category_id"
-                                    v-model="form.category_id"
-                                >
-                                    <option
-                                        v-for="category in categories"
-                                        :key="category.id"
-                                        :value="category.id"
-                                    >
-                                        {{ category.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.code"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.code }}
-                                </div>
-                                <label for="code">Kode</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="code"
-                                    name="code"
-                                    placeholder="Masukkan kode komoditas"
-                                    v-model="form.code"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <div
                                     v-if="errors.name"
                                     class="alert alert-danger mt-2"
                                 >
                                     {{ errors.name }}
                                 </div>
-                                <label for="name">Nama Komoditas</label>
+                                <label for="name">Nama Supplier</label>
                                 <input
                                     type="text"
                                     class="form-control"
                                     name="name"
                                     id="name"
-                                    placeholder="Masukkan nama komoditas"
+                                    placeholder="Masukkan nama supplier"
                                     v-model="form.name"
                                 />
                             </div>
+
                             <div class="mb-4">
                                 <div
-                                    v-if="errors.description"
+                                    v-if="errors.email"
                                     class="alert alert-danger mt-2"
                                 >
-                                    {{ errors.description }}
+                                    {{ errors.email }}
                                 </div>
-                                <label for="description">Deskripsi</label>
-                                <textarea
+                                <label for="email">Email</label>
+                                <input
+                                    type="text"
                                     class="form-control"
-                                    name="description"
-                                    id="description"
-                                    rows="3"
-                                    placeholder="Masukkan deskripsi komoditas"
-                                    v-model="form.description"
-                                ></textarea>
+                                    id="code"
+                                    name="code"
+                                    placeholder="Masukkan alamat email"
+                                    v-model="form.email"
+                                />
                             </div>
                             <div class="mb-4">
                                 <div
-                                    v-if="errors.stock"
+                                    v-if="errors.phone"
                                     class="alert alert-danger mt-2"
                                 >
-                                    {{ errors.stock }}
+                                    {{ errors.phone }}
                                 </div>
-                                <label for="stock">Stok</label>
+                                <label for="code">No. Handphone</label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     class="form-control"
-                                    name="stock"
-                                    id="stock"
-                                    placeholder="Masukkan stok komoditas"
-                                    v-model="form.stock"
+                                    id="code"
+                                    name="code"
+                                    placeholder="Masukkan nomor handphone"
+                                    v-model="form.phone"
                                 />
+                            </div>
+                            <!-- Address with text area-->
+                            <div class="mb-4">
+                                <div
+                                    v-if="errors.address"
+                                    class="alert alert-danger mt-2"
+                                >
+                                    {{ errors.address }}
+                                </div>
+                                <label for="code">Alamat</label>
+                                <textarea
+                                    class="form-control"
+                                    id="code"
+                                    name="code"
+                                    placeholder="Masukkan alamat"
+                                    v-model="form.address"
+                                ></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -308,7 +246,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 class="h6 modal-title">Ubah Data Komoditas</h2>
+                        <h2 class="h6 modal-title">Edit Data Supplier</h2>
                         <button
                             type="button"
                             class="btn-close"
@@ -320,117 +258,68 @@
                         <div class="modal-body">
                             <div class="mb-4">
                                 <div
-                                    v-if="errors.warehouse_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.warehouse_id }}
-                                </div>
-                                <label for="warehouse_id">Gudang</label>
-                                <select
-                                    class="form-select"
-                                    name="warehouse_id"
-                                    id="warehouse_id"
-                                    v-model="editModalData.warehouse_id"
-                                >
-                                    <option
-                                        v-for="warehouse in warehouses"
-                                        :key="warehouse.id"
-                                        :value="warehouse.id"
-                                    >
-                                        {{ warehouse.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.category_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.category_id }}
-                                </div>
-                                <label for="category_id">Kategori</label>
-                                <select
-                                    class="form-select"
-                                    name="category_id"
-                                    id="category_id"
-                                    v-model="editModalData.category_id"
-                                >
-                                    <option
-                                        v-for="category in categories"
-                                        :key="category.id"
-                                        :value="category.id"
-                                    >
-                                        {{ category.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.code"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.code }}
-                                </div>
-                                <label for="code">Kode</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="code"
-                                    name="code"
-                                    placeholder="Masukkan kode komoditas"
-                                    v-model="editModalData.code"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <div
                                     v-if="errors.name"
                                     class="alert alert-danger mt-2"
                                 >
                                     {{ errors.name }}
                                 </div>
-                                <label for="name">Nama Komoditas</label>
+                                <label for="name">Nama Supplier</label>
                                 <input
                                     type="text"
                                     class="form-control"
                                     name="name"
                                     id="name"
-                                    placeholder="Masukkan nama komoditas"
                                     v-model="editModalData.name"
                                 />
                             </div>
+
                             <div class="mb-4">
                                 <div
-                                    v-if="errors.description"
+                                    v-if="errors.email"
                                     class="alert alert-danger mt-2"
                                 >
-                                    {{ errors.description }}
+                                    {{ errors.email }}
                                 </div>
-                                <label for="description">Deskripsi</label>
-                                <textarea
+                                <label for="email">Email</label>
+                                <input
+                                    type="text"
                                     class="form-control"
-                                    name="description"
-                                    id="description"
-                                    rows="3"
-                                    placeholder="Masukkan deskripsi komoditas"
-                                    v-model="editModalData.description"
-                                ></textarea>
+                                    id="email"
+                                    name="email"
+                                    v-model="editModalData.email"
+                                />
                             </div>
                             <div class="mb-4">
                                 <div
-                                    v-if="errors.stock"
+                                    v-if="errors.phone"
                                     class="alert alert-danger mt-2"
                                 >
-                                    {{ errors.stock }}
+                                    {{ errors.phone }}
                                 </div>
-                                <label for="stock">Stok</label>
+                                <label for="phone">No. Handphone</label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     class="form-control"
-                                    name="stock"
-                                    id="stock"
-                                    placeholder="Masukkan stok komoditas"
-                                    v-model="editModalData.stock"
+                                    name="name"
+                                    id="name"
+                                    v-model="editModalData.phone"
                                 />
+                            </div>
+                            <!-- Address with text area-->
+                            <div class="mb-4">
+                                <div
+                                    v-if="errors.address"
+                                    class="alert alert-danger mt-2"
+                                >
+                                    {{ errors.address }}
+                                </div>
+                                <label for="code">Alamat</label>
+                                <textarea
+                                    class="form-control"
+                                    id="code"
+                                    name="code"
+                                    v-model="editModalData.address"
+                                ></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -439,7 +328,7 @@
                                 id="btn-save-edit"
                                 class="btn btn-secondary"
                             >
-                                Ubah
+                                Simpan
                             </button>
                         </div>
                     </form>
@@ -472,9 +361,7 @@ export default {
     },
 
     props: {
-        commodities: Object,
-        warehouses: Object,
-        categories: Object,
+        suppliers: Object,
         errors: Object,
     },
 
@@ -486,19 +373,19 @@ export default {
 
         //define state form with reactive
         const form = reactive({
-            warehouse_id: "",
-            category_id: "",
-            code: "",
             name: "",
-            description: "",
-            stock: "",
+            email: "",
+            phone: "",
+            address: "",
         });
 
         //define method search
         const handleSearch = () => {
-            router.get("/commodities", {
-                q: search.value,
-            });
+            router.get(
+                route("suppliers.index", {
+                    q: search.value,
+                })
+            );
         };
 
         //define method submit
@@ -510,25 +397,21 @@ export default {
                 '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
             //send data to server
             router.post(
-                "/commodities",
+                route("suppliers.store"),
                 {
                     //data
-                    warehouse_id: form.warehouse_id,
-                    category_id: form.category_id,
-                    code: form.code,
                     name: form.name,
-                    description: form.description,
-                    stock: form.stock,
+                    email: form.email,
+                    phone: form.phone,
+                    address: form.address,
                 },
                 {
                     onSuccess: () => {
                         //reset form
-                        form.warehouse_id = "";
-                        form.category_id = "";
                         form.name = "";
-                        form.code = "";
-                        form.description = "";
-                        form.stock = "";
+                        form.email = "";
+                        form.phone = "";
+                        form.address = "";
 
                         // enable btn-save menggunakan js
                         document.getElementById("btn-save").disabled = false;
@@ -540,7 +423,7 @@ export default {
 
                         Swal.fire({
                             title: "Success!",
-                            text: "Data Komoditas Disimpan!.",
+                            text: "Data Suplier Disimpan!.",
                             icon: "success",
                             showConfirmButton: false,
                             timer: 2000,
@@ -559,23 +442,19 @@ export default {
 
         const editModalData = reactive({
             id: "",
-            warehouse_id: "",
-            category_id: "",
-            code: "",
             name: "",
-            description: "",
-            stock: "",
+            email: "",
+            phone: "",
+            address: "",
         });
 
-        const openEditModal = (commodities) => {
+        const openEditModal = (category) => {
             // set data to editModalData
-            editModalData.id = commodities.id;
-            editModalData.warehouse_id = commodities.warehouse_id;
-            editModalData.category_id = commodities.category_id;
-            editModalData.code = commodities.code;
-            editModalData.name = commodities.name;
-            editModalData.description = commodities.description;
-            editModalData.stock = commodities.stock;
+            editModalData.id = category.id;
+            editModalData.name = category.name;
+            editModalData.email = category.email;
+            editModalData.phone = category.phone;
+            editModalData.address = category.address;
 
             // Open the edit modal
             const editModal = new bootstrap.Modal(
@@ -592,36 +471,37 @@ export default {
                 '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
             //send data to server
             router.put(
-                `/commodities/${editModalData.id}`,
+                // `/commodity/categories/${editModalData.id}`,
+                route("suppliers.update", editModalData.id),
                 {
                     //data
-                    warehouse_id: editModalData.warehouse_id,
-                    category_id: editModalData.category_id,
-                    code: editModalData.code,
                     name: editModalData.name,
-                    description: editModalData.description,
-                    stock: editModalData.stock,
+                    email: editModalData.email,
+                    phone: editModalData.phone,
+                    address: editModalData.address,
                 },
                 {
                     onSuccess: () => {
                         //reset form
-                        editModalData.warehouse_id = "";
-                        editModalData.category_id = "";
-                        editModalData.code = "";
                         editModalData.name = "";
-                        editModalData.description = "";
-                        editModalData.stock = "";
+                        editModalData.email = "";
+                        editModalData.phone = "";
+                        editModalData.address = "";
 
+                        // enable btn-save-edit menggunakan js
                         document.getElementById(
                             "btn-save-edit"
                         ).disabled = false;
+                        // set btn-save-edit menjadi simpan
+                        document.getElementById("btn-save-edit").innerHTML =
+                            "Simpan";
 
                         //close modal menggunakan js
                         document.getElementById("modal-edit").click();
 
                         Swal.fire({
                             title: "Success!",
-                            text: "Data Komoditas Diubah!.",
+                            text: "Data Supplier Diubah!.",
                             icon: "success",
                             showConfirmButton: false,
                             timer: 2000,
@@ -638,7 +518,7 @@ export default {
 
                         Swal.fire({
                             title: "Error!",
-                            text: "Data Komoditas Gagal Diubah!",
+                            text: "Data Supplier Gagal Diubah!",
                             icon: "error",
                             showConfirmButton: false,
                             timer: 2000,
@@ -651,7 +531,7 @@ export default {
         const destroy = (id) => {
             Swal.fire({
                 title: "Apakah kamu yakin?",
-                text: "Data komoditas akan dihapus!",
+                text: "Data supplier akan dihapus!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Ya, hapus!",
@@ -659,26 +539,30 @@ export default {
                 // reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    router.delete(`/commodities/${id}`, {
-                        onSuccess: () => {
-                            Swal.fire({
-                                title: "Success!",
-                                text: "Data Komoditas Dihapus!.",
-                                icon: "success",
-                                showConfirmButton: false,
-                                timer: 2000,
-                            });
-                        },
-                        onError: () => {
-                            Swal.fire({
-                                title: "Error!",
-                                text: "Data Komoditas Gagal Dihapus!",
-                                icon: "error",
-                                showConfirmButton: false,
-                                timer: 2000,
-                            });
-                        },
-                    });
+                    router.delete(
+                        // `/commodity/categories/${id}`,
+                        route("suppliers.destroy", id),
+                        {
+                            onSuccess: () => {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: "Data Supplier Dihapus!.",
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                });
+                            },
+                            onError: () => {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: "Data Supplier Dihapus!",
+                                    icon: "error",
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                });
+                            },
+                        }
+                    );
                 }
             });
         };

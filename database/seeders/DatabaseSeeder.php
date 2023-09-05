@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // UserSeeder::class,
             // WarehouseSeeder::class,
-            CommodityCategoriesSeeder::class,
+            // CommodityCategoriesSeeder::class,
+            SupplierSeeder::class,
         ]);
     }
 }

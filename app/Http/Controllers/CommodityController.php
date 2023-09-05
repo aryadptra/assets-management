@@ -48,7 +48,7 @@ class CommodityController extends Controller
     {
         $request->validate(
             [
-                'category_id' => 'required|exists:categories,id',
+                'category_id' => 'required|exists:commodity_categories,id',
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'code' => 'required|string|max:255|unique:commodities,code',
                 'name' => 'required|string|max:255',
@@ -97,7 +97,12 @@ class CommodityController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // data berdasarkan id
+        $commodity = Commodity::findOrFail($id);
+
+        return Inertia::render('Admin/Commodity/Show', [
+            'commodity' => $commodity,
+        ]);
     }
 
     /**
