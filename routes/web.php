@@ -32,9 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('warehouses', \App\Http\Controllers\WarehouseController::class)->except(['show']);
     Route::resource('commodity/categories', \App\Http\Controllers\CommodityCategoryController::class)->except(['show']);
     Route::resource('commodities', \App\Http\Controllers\CommodityController::class);
-
     // Suppliers
     Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
+    // Orders
+    Route::resource('orders', \App\Http\Controllers\OrderController::class);
 });
 
 require __DIR__ . '/auth.php';
