@@ -76,6 +76,8 @@
                                         <th class="border-0">Nama</th>
                                         <th class="border-0">Deskripsi</th>
                                         <th class="border-0">Stok</th>
+                                        <th class="border-0">Harga Beli</th>
+                                        <th class="border-0">Harga Jual</th>
                                         <th
                                             class="border-0 rounded-end"
                                             style="width: 15%"
@@ -104,6 +106,20 @@
                                         <td>{{ commodity.name }}</td>
                                         <td>{{ commodity.description }}</td>
                                         <td>{{ commodity.stock }}</td>
+                                        <td>
+                                            {{
+                                                formatRupiah(
+                                                    commodity.buying_price
+                                                )
+                                            }}
+                                        </td>
+                                        <td>
+                                            {{
+                                                formatRupiah(
+                                                    commodity.selling_price
+                                                )
+                                            }}
+                                        </td>
                                         <td class="text-center">
                                             <!-- Link to detail -->
                                             <Link
@@ -154,7 +170,10 @@
             aria-labelledby="modal-default"
             aria-hidden="true"
         >
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div
+                class="modal-dialog modal-dialog-centered modal-lg"
+                role="document"
+            >
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2 class="h6 modal-title">Tambah Data Komoditas</h2>
@@ -167,119 +186,178 @@
                     </div>
                     <form @submit.prevent="submit">
                         <div class="modal-body">
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.warehouse_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.warehouse_id }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.warehouse_id"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.warehouse_id }}
+                                        </div>
+                                        <label for="warehouse_id">Gudang</label>
+                                        <select
+                                            class="form-select"
+                                            name="warehouse_id"
+                                            id="warehouse_id"
+                                            v-model="form.warehouse_id"
+                                        >
+                                            <option
+                                                v-for="warehouse in warehouses"
+                                                :key="warehouse.id"
+                                                :value="warehouse.id"
+                                            >
+                                                {{ warehouse.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <label for="warehouse_id">Gudang</label>
-                                <select
-                                    class="form-select"
-                                    name="warehouse_id"
-                                    id="warehouse_id"
-                                    v-model="form.warehouse_id"
-                                >
-                                    <option
-                                        v-for="warehouse in warehouses"
-                                        :key="warehouse.id"
-                                        :value="warehouse.id"
-                                    >
-                                        {{ warehouse.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.category_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.category_id }}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.category_id"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.category_id }}
+                                        </div>
+                                        <label for="category_id"
+                                            >Kategori</label
+                                        >
+                                        <select
+                                            class="form-select"
+                                            name="category_id"
+                                            id="category_id"
+                                            v-model="form.category_id"
+                                        >
+                                            <option
+                                                v-for="category in categories"
+                                                :key="category.id"
+                                                :value="category.id"
+                                            >
+                                                {{ category.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <label for="category_id">Kategori</label>
-                                <select
-                                    class="form-select"
-                                    name="category_id"
-                                    id="category_id"
-                                    v-model="form.category_id"
-                                >
-                                    <option
-                                        v-for="category in categories"
-                                        :key="category.id"
-                                        :value="category.id"
-                                    >
-                                        {{ category.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.code"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.code }}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.code"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.code }}
+                                        </div>
+                                        <label for="code">Kode</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="code"
+                                            name="code"
+                                            placeholder="Masukkan kode komoditas"
+                                            v-model="form.code"
+                                        />
+                                    </div>
                                 </div>
-                                <label for="code">Kode</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="code"
-                                    name="code"
-                                    placeholder="Masukkan kode komoditas"
-                                    v-model="form.code"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.name"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.name }}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.name"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.name }}
+                                        </div>
+                                        <label for="name">Nama Komoditas</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="name"
+                                            id="name"
+                                            placeholder="Masukkan nama komoditas"
+                                            v-model="form.name"
+                                        />
+                                    </div>
                                 </div>
-                                <label for="name">Nama Komoditas</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="name"
-                                    id="name"
-                                    placeholder="Masukkan nama komoditas"
-                                    v-model="form.name"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.description"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.description }}
+                                <div class="col-md-12">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.description"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.description }}
+                                        </div>
+                                        <label for="description"
+                                            >Deskripsi</label
+                                        >
+                                        <textarea
+                                            class="form-control"
+                                            name="description"
+                                            id="description"
+                                            rows="3"
+                                            placeholder="Masukkan deskripsi komoditas"
+                                            v-model="form.description"
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.stock"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.stock }}
+                                        </div>
+                                        <label for="stock">Stok</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name="stock"
+                                            id="stock"
+                                            placeholder="Masukkan stok komoditas"
+                                            v-model="form.stock"
+                                        />
+                                    </div>
                                 </div>
-                                <label for="description">Deskripsi</label>
-                                <textarea
-                                    class="form-control"
-                                    name="description"
-                                    id="description"
-                                    rows="3"
-                                    placeholder="Masukkan deskripsi komoditas"
-                                    v-model="form.description"
-                                ></textarea>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.stock"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.stock }}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.buying_price"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.buying_price }}
+                                        </div>
+                                        <label for="selling_price"
+                                            >Harga Beli</label
+                                        >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name="selling_price"
+                                            id="selling_price"
+                                            placeholder="Masukkan harga beli"
+                                            v-model="form.buying_price"
+                                        />
+                                    </div>
                                 </div>
-                                <label for="stock">Stok</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    name="stock"
-                                    id="stock"
-                                    placeholder="Masukkan stok komoditas"
-                                    v-model="form.stock"
-                                />
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.selling_price"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.selling_price }}
+                                        </div>
+                                        <label for="selling_price"
+                                            >Harga Jual</label
+                                        >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name="selling_price"
+                                            id="selling_price"
+                                            placeholder="Masukkan harga jual"
+                                            v-model="form.selling_price"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -305,7 +383,10 @@
             aria-labelledby="modal-edit"
             aria-hidden="true"
         >
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div
+                class="modal-dialog modal-dialog-centered modal-lg"
+                role="document"
+            >
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2 class="h6 modal-title">Ubah Data Komoditas</h2>
@@ -318,119 +399,181 @@
                     </div>
                     <form @submit.prevent="submitEdit">
                         <div class="modal-body">
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.warehouse_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.warehouse_id }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.warehouse_id"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.warehouse_id }}
+                                        </div>
+                                        <label for="warehouse_id">Gudang</label>
+                                        <select
+                                            class="form-select"
+                                            name="warehouse_id"
+                                            id="warehouse_id"
+                                            v-model="editModalData.warehouse_id"
+                                        >
+                                            <option
+                                                v-for="warehouse in warehouses"
+                                                :key="warehouse.id"
+                                                :value="warehouse.id"
+                                            >
+                                                {{ warehouse.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <label for="warehouse_id">Gudang</label>
-                                <select
-                                    class="form-select"
-                                    name="warehouse_id"
-                                    id="warehouse_id"
-                                    v-model="editModalData.warehouse_id"
-                                >
-                                    <option
-                                        v-for="warehouse in warehouses"
-                                        :key="warehouse.id"
-                                        :value="warehouse.id"
-                                    >
-                                        {{ warehouse.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.category_id"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.category_id }}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.category_id"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.category_id }}
+                                        </div>
+                                        <label for="category_id"
+                                            >Kategori</label
+                                        >
+                                        <select
+                                            class="form-select"
+                                            name="category_id"
+                                            id="category_id"
+                                            v-model="editModalData.category_id"
+                                        >
+                                            <option
+                                                v-for="category in categories"
+                                                :key="category.id"
+                                                :value="category.id"
+                                            >
+                                                {{ category.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <label for="category_id">Kategori</label>
-                                <select
-                                    class="form-select"
-                                    name="category_id"
-                                    id="category_id"
-                                    v-model="editModalData.category_id"
-                                >
-                                    <option
-                                        v-for="category in categories"
-                                        :key="category.id"
-                                        :value="category.id"
-                                    >
-                                        {{ category.name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.code"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.code }}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.code"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.code }}
+                                        </div>
+                                        <label for="code">Kode</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="code"
+                                            name="code"
+                                            placeholder="Masukkan kode komoditas"
+                                            v-model="editModalData.code"
+                                        />
+                                    </div>
                                 </div>
-                                <label for="code">Kode</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="code"
-                                    name="code"
-                                    placeholder="Masukkan kode komoditas"
-                                    v-model="editModalData.code"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.name"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.name }}
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.name"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.name }}
+                                        </div>
+                                        <label for="name">Nama Komoditas</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="name"
+                                            id="name"
+                                            placeholder="Masukkan nama komoditas"
+                                            v-model="editModalData.name"
+                                        />
+                                    </div>
                                 </div>
-                                <label for="name">Nama Komoditas</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="name"
-                                    id="name"
-                                    placeholder="Masukkan nama komoditas"
-                                    v-model="editModalData.name"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.description"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.description }}
+                                <div class="col-md-12">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.description"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.description }}
+                                        </div>
+                                        <label for="description"
+                                            >Deskripsi</label
+                                        >
+                                        <textarea
+                                            class="form-control"
+                                            name="description"
+                                            id="description"
+                                            rows="3"
+                                            placeholder="Masukkan deskripsi komoditas"
+                                            v-model="editModalData.description"
+                                        ></textarea>
+                                    </div>
                                 </div>
-                                <label for="description">Deskripsi</label>
-                                <textarea
-                                    class="form-control"
-                                    name="description"
-                                    id="description"
-                                    rows="3"
-                                    placeholder="Masukkan deskripsi komoditas"
-                                    v-model="editModalData.description"
-                                ></textarea>
-                            </div>
-                            <div class="mb-4">
-                                <div
-                                    v-if="errors.stock"
-                                    class="alert alert-danger mt-2"
-                                >
-                                    {{ errors.stock }}
+                                <div class="col-md-12">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.stock"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.stock }}
+                                        </div>
+                                        <label for="stock">Stok</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name="stock"
+                                            id="stock"
+                                            placeholder="Masukkan stok komoditas"
+                                            v-model="editModalData.stock"
+                                        />
+                                    </div>
                                 </div>
-                                <label for="stock">Stok</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    name="stock"
-                                    id="stock"
-                                    placeholder="Masukkan stok komoditas"
-                                    v-model="editModalData.stock"
-                                />
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.buying_price"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.buying_price }}
+                                        </div>
+                                        <label for="buying_price"
+                                            >Harga Beli</label
+                                        >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name="buying_price"
+                                            id="buying_price"
+                                            placeholder="Masukkan harga beli"
+                                            v-model="editModalData.buying_price"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <div
+                                            v-if="errors.selling_price"
+                                            class="alert alert-danger mt-2"
+                                        >
+                                            {{ errors.selling_price }}
+                                        </div>
+                                        <label for="selling_price"
+                                            >Harga Jual</label
+                                        >
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name="selling_price"
+                                            id="selling_price"
+                                            placeholder="Masukkan harga jual"
+                                            v-model="
+                                                editModalData.selling_price
+                                            "
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -492,6 +635,8 @@ export default {
             name: "",
             description: "",
             stock: "",
+            buying_price: "",
+            selling_price: "",
         });
 
         //define method search
@@ -519,6 +664,8 @@ export default {
                     name: form.name,
                     description: form.description,
                     stock: form.stock,
+                    buying_price: form.buying_price,
+                    selling_price: form.selling_price,
                 },
                 {
                     onSuccess: () => {
@@ -529,6 +676,8 @@ export default {
                         form.code = "";
                         form.description = "";
                         form.stock = "";
+                        form.buying_price = "";
+                        form.selling_price = "";
 
                         // enable btn-save menggunakan js
                         document.getElementById("btn-save").disabled = false;
@@ -565,6 +714,8 @@ export default {
             name: "",
             description: "",
             stock: "",
+            buying_price: "",
+            selling_price: "",
         });
 
         const openEditModal = (commodities) => {
@@ -576,6 +727,8 @@ export default {
             editModalData.name = commodities.name;
             editModalData.description = commodities.description;
             editModalData.stock = commodities.stock;
+            editModalData.buying_price = commodities.buying_price;
+            editModalData.selling_price = commodities.selling_price;
 
             // Open the edit modal
             const editModal = new bootstrap.Modal(
@@ -601,6 +754,8 @@ export default {
                     name: editModalData.name,
                     description: editModalData.description,
                     stock: editModalData.stock,
+                    buying_price: editModalData.buying_price,
+                    selling_price: editModalData.selling_price,
                 },
                 {
                     onSuccess: () => {
@@ -611,10 +766,15 @@ export default {
                         editModalData.name = "";
                         editModalData.description = "";
                         editModalData.stock = "";
+                        editModalData.buying_price = "";
+                        editModalData.selling_price = "";
 
                         document.getElementById(
                             "btn-save-edit"
                         ).disabled = false;
+                        // set btn-save-edit menjadi simpan
+                        document.getElementById("btn-save-edit").innerHTML =
+                            "Simpan";
 
                         //close modal menggunakan js
                         document.getElementById("modal-edit").click();

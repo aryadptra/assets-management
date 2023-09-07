@@ -54,6 +54,8 @@ class CommodityController extends Controller
                 'name' => 'required|string|max:255',
                 'description' => 'required|string|max:255',
                 'stock' => 'required|integer',
+                'buying_price' => 'required|integer',
+                'selling_price' => 'required|integer',
             ],
             [
                 'category_id.required' => 'Kategori harus diisi',
@@ -71,6 +73,10 @@ class CommodityController extends Controller
                 'description.max' => 'Deskripsi maksimal 255 karakter',
                 'stock.required' => 'Stok harus diisi',
                 'stock.integer' => 'Stok harus berupa angka',
+                'buying_price.required' => 'Harga beli harus diisi',
+                'buying_price.integer' => 'Harga beli harus berupa angka',
+                'selling_price.required' => 'Harga jual harus diisi',
+                'selling_price.integer' => 'Harga jual harus berupa angka',
             ]
         );
 
@@ -81,6 +87,8 @@ class CommodityController extends Controller
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'stock' => $request->input('stock'),
+            'buying_price' => $request->input('buying_price'),
+            'selling_price' => $request->input('selling_price'),
         ];
 
         $create = Commodity::create($data);
@@ -126,6 +134,8 @@ class CommodityController extends Controller
                 'name' => 'required|string|max:255',
                 'description' => 'required|string|max:255',
                 'stock' => 'required|integer',
+                'buying_price' => 'required|integer',
+                'selling_price' => 'required|integer',
             ],
             [
                 'category_id.required' => 'Kategori harus diisi',
@@ -140,6 +150,10 @@ class CommodityController extends Controller
                 'description.max' => 'Deskripsi maksimal 255 karakter',
                 'stock.required' => 'Stok harus diisi',
                 'stock.integer' => 'Stok harus berupa angka',
+                'buying_price.required' => 'Harga beli harus diisi',
+                'buying_price.integer' => 'Harga beli harus berupa angka',
+                'selling_price.required' => 'Harga jual harus diisi',
+                'selling_price.integer' => 'Harga jual harus berupa angka',
             ]
         );
 
@@ -150,6 +164,8 @@ class CommodityController extends Controller
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'stock' => $request->input('stock'),
+            'buying_price' => $request->input('buying_price'),
+            'selling_price' => $request->input('selling_price'),
         ];
 
         $update = $commodity->update($data);

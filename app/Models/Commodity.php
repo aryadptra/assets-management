@@ -10,14 +10,7 @@ class Commodity extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'warehouse_id',
-        'category_id',
-        'code',
-        'name',
-        'description',
-        'stock',
-    ];
+    protected $guarded = ['id'];
 
     public function warehouse()
     {
