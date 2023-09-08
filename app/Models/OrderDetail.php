@@ -11,4 +11,14 @@ class OrderDetail extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function commodity()
+    {
+        return $this->belongsTo(Commodity::class);
+    }
 }

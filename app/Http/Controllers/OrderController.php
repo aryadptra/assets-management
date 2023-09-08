@@ -22,7 +22,7 @@ class OrderController extends Controller
         // get data
         $orders = Order::when(request()->q, function ($orders) {
             $orders = $orders->where('name', 'like', '%' . request()->q . '%');
-        })->latest()->paginate(10);
+        })->with('user', 'commodity')->latest()->paginate(10);
 
         // append query string to pagination links
         $orders->appends(request()->all());
@@ -124,7 +124,14 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order = Order::with('user')->find($order->id);
+
+        $detail = OrderDetail::with('commodity')->where('order_id', $order->id)->get();
+
+        return Inertia::render('Admin/Orders/Detail', [
+            'order' => $order,
+            'detail' => $detail,
+        ]);
     }
 
     /**
@@ -148,6 +155,17 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        // cek order detail berdasarkan order_id
+        $order_details = OrderDetail::where('order_id', $order->id)->get();
+
+        foreach ($order_details as $order_detail) {
+            Commodity::find($order_detail->commodity_id)->update([
+                'stock' => Commodity::find($order_detail->commodity_id)->stock + $order_detail->quantity,
+            ]);
+        }
+
+        $order->forceDelete();
+
+        return to_route('orders.index');
     }
 }

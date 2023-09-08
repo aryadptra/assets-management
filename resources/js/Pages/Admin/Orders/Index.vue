@@ -73,7 +73,7 @@
                                         <th class="border-0">Pemesan</th>
                                         <th class="border-0">Tanggal</th>
                                         <th class="border-0">Tipe</th>
-                                        <th class="border-0">Pemesan</th>
+                                        <th class="border-0">Status</th>
                                         <th class="border-0">Sub Total</th>
                                         <th class="border-0">
                                             Total Komoditas
@@ -100,20 +100,32 @@
                                             }}
                                         </td>
                                         <td>{{ order.invoice_number }}</td>
-                                        <td>{{ order.user_id }}</td>
+                                        <td>{{ order.user.name }}</td>
                                         <td>{{ order.date }}</td>
                                         <td>{{ order.type }}</td>
-                                        <td>{{ order.status }}</td>
+                                        <td>
+                                            <span
+                                                :class="
+                                                    getStatusClass(order.status)
+                                                "
+                                            >
+                                                {{ order.status }}
+                                            </span>
+                                        </td>
                                         <td>{{ order.sub_total }}</td>
                                         <td>{{ order.total_commodities }}</td>
                                         <td class="text-center">
-                                            <button
-                                                class="btn btn-sm btn-info border-0 shadow me-2"
-                                                type="button"
-                                                @click="openEditModal(order)"
+                                            <Link
+                                                :href="
+                                                    route(
+                                                        'orders.show',
+                                                        order.id
+                                                    )
+                                                "
+                                                class="btn btn-sm btn-success text-white border-0 shadow me-2"
                                             >
-                                                <i class="fa fa-pencil-alt"></i>
-                                            </button>
+                                                <i class="fa fa-eye"></i>
+                                            </Link>
                                             <button
                                                 @click.prevent="
                                                     destroy(order.id)
@@ -159,7 +171,25 @@ export default {
 
     props: {
         orders: Object,
+        users: Object,
         errors: Object,
+    },
+
+    methods: {
+        getStatusClass(status) {
+            const statusClasses = {
+                Pending: "badge bg-danger",
+                Rejected: "badge bg-warning",
+                Delivered: "badge bg-info",
+                Approved: "badge bg-success",
+                Cancelled: "badge bg-secondary",
+                Processing: "badge bg-primary",
+                Success: "badge bg-info",
+                // Tambahkan status dan kelas baru sesuai kebutuhan Anda
+            };
+
+            return statusClasses[status] || "badge bg-secondary"; // Default class jika status tidak cocok
+        },
     },
 
     setup() {
@@ -204,7 +234,7 @@ export default {
                             onError: () => {
                                 Swal.fire({
                                     title: "Error!",
-                                    text: "Data Supplier Dihapus!",
+                                    text: "Terjadi Kesalahan!",
                                     icon: "error",
                                     showConfirmButton: false,
                                     timer: 2000,

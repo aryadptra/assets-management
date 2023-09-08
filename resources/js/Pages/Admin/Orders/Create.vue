@@ -29,7 +29,7 @@
                     <div class="card-body">
                         <!-- Select the categories -->
                         <div class="row">
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="warehouse">Pilih Gudang</label>
                                     <select
@@ -69,7 +69,7 @@
                                         </option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- Foreach every commodities -->
                         <table class="table table-hover mt-3">
