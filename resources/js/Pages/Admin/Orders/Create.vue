@@ -1,5 +1,5 @@
 <template>
-    <Head title="Supplier" />
+    <Head title="Orders" />
 
     <Admin>
         <Breadcrumb>
