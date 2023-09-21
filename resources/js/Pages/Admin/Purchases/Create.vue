@@ -143,7 +143,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Barang</th>
                                     <th scope="col">Qty</th>
-                                    <th scope="col">Harga</th>
+                                    <!-- <th scope="col">Harga</th> -->
                                     <th scope="col">Total</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
@@ -156,9 +156,9 @@
                                     <th scope="row">{{ index + 1 }}</th>
                                     <td>{{ item.name }}</td>
                                     <td>{{ item.quantity }}</td>
-                                    <td>
+                                    <!-- <td>
                                         {{ formatRupiah(item.selling_price) }}
-                                    </td>
+                                    </td> -->
                                     <td>
                                         {{ formatRupiah(item.total) }}
                                     </td>
@@ -326,7 +326,7 @@ export default {
             }, 0);
 
             router.post(
-                route("orders.store"),
+                route("purchases.store"),
                 {
                     commodities: commodities,
                     total_commodities: totalCommodities,

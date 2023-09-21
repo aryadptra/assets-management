@@ -9,6 +9,8 @@ use App\Models\Commodity;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\CommodityCategory;
+use App\Models\PurchaseDetail;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends Controller
 {
@@ -59,7 +61,31 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $purchase = Purchase::create([
+            'user_id' => Auth::user()->id,
+            'supplier_id' => $request->supplier_id,
+            'invoice_number' => 1,
+            'date' => date('Y-m-d'),
+            'type' => 'Order',
+            'status' => 'Pending',
+            'sub_total' => $request->sub_total,
+            'total_commodities' => $request->total_commodities,
+        ]);
+        // Loop through the commodities and associate them with the order
+        foreach ($request->commodities as $commodity) {
+            OrderDetail::create([
+                'purchase_id' => $purchase->id,
+                'commodity_id' => $commodity['commodity_id'],
+                'quantity' => $commodity['quantity'],
+                'unit_price' => $commodity['unit_price'],
+                'total' => $commodity['total'],
+            ]);
+
+            // add stock
+            Commodity::find($commodity['commodity_id'])->update([
+                'stock' => Commodity::find($commodity['commodity_id'])->stock + $commodity['quantity'],
+            ]);
+        }
     }
 
     /**
@@ -67,7 +93,14 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
-        //
+        $purchase = Purchase::with('user')->find($purchase->id);
+
+        $detail = PurchaseDetail::with('commodity')->where('order_id', $purchase->id)->get();
+
+        return Inertia::render('Admin/Purchases/Detail', [
+            'purchase' => $purchase,
+            'detail' => $detail,
+        ]);
     }
 
     /**
